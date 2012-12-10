@@ -22,6 +22,7 @@
 
 @synthesize gameWidth  = mGameWidth;
 @synthesize gameHeight = mGameHeight;
+@synthesize paddle = mPaddle;
 
 - (id)initWithWidth:(float)width height:(float)height
 {
@@ -38,7 +39,7 @@
 - (void)dealloc
 {
     // release any resources here
-    
+    [mPaddle release];
     [Media releaseAtlas];
     [Media releaseSound];
     
@@ -75,23 +76,15 @@
     
     // Display the Sparrow egg
     
-    SPImage *image = [[SPImage alloc] initWithTexture:[Media atlasTexture:@"sparrow"]];
-    image.pivotX = (int)image.width / 2;
-    image.pivotY = (int)image.height / 2;
-    image.x = mGameWidth / 2;
-    image.y = mGameHeight / 2 + 40;
-    [self addChild:image];
+    mPaddle = [[SPImage alloc] initWithTexture:[Media atlasTexture:@"sparrow"]];
+    mPaddle.pivotX = (int)mPaddle.width / 2;
+    mPaddle.pivotY = (int)mPaddle.height / 2;
+    mPaddle.x = mGameWidth / 2;
+    mPaddle.y = mGameHeight / 2 + 40;
+    [self addChild:mPaddle];
     
     // play a sound when the image is touched
-    [image addEventListener:@selector(onImageTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
-    
-    // and animate it a little
-    SPTween *tween = [SPTween tweenWithTarget:image time:1.5 transition:SP_TRANSITION_EASE_IN_OUT];
-    [tween animateProperty:@"y" targetValue:image.y + 30];
-    [tween animateProperty:@"rotation" targetValue:0.1];
-    tween.loop = SPLoopTypeReverse;
-    [[SPStage mainStage].juggler addObject:tween];
-    
+    [mPaddle addEventListener:@selector(onImageTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
     
     // Create a text field
     
@@ -100,7 +93,7 @@
     
     SPTextField *textField = [[SPTextField alloc] initWithWidth:280 height:80 text:text];
     textField.x = (mGameWidth - textField.width) / 2;
-    textField.y = image.y - 175;
+    textField.y = mPaddle.y - 175;
     [self addChild:textField];
     
 
@@ -116,6 +109,9 @@
     
     [self addEventListener:@selector(onEnterFrame:) atObject:self forType:SP_EVENT_TYPE_ENTER_FRAME];
     
+    [mPaddle addEventListener:@selector(onTouch:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+
+    
     
     // We release the objects, because we don't keep any reference to them.
     // (Their parent display objects will take care of them.)
@@ -126,7 +122,7 @@
     // Those lines will then be removed from the project.
     
     [background release];
-    [image release];
+    //
     [textField release];
     
     
@@ -141,11 +137,29 @@
     // To support the iPad, the minimum "iOS deployment target" is "iOS 3.2".
 }
 
+- (void)onTouch:(SPTouchEvent *)event {
+    SPTouch *touch = [event.touches anyObject];
+    if (touch.phase == SPTouchPhaseBegan) {
+        NSLog(@"begin");
+    }
+    if (touch.phase == SPTouchPhaseMoved) {
+        NSLog(@"move");
+        mPaddle.x = touch.globalX;
+        mPaddle.y = touch.globalY;
+        
+    }
+    if (touch.phase == SPTouchPhaseEnded) {
+        NSLog(@"end");
+    }
+}
+
 - (void)onEnterFrame:(SPEnterFrameEvent *)event
 {
     
     //for (SPDisplayObject *child in mContainer)
         //child.rotation += 0.05f;
+    
+    // Check for collision detection
 }
 
 - (void)onImageTouched:(SPTouchEvent *)event

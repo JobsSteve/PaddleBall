@@ -14,10 +14,12 @@
   @private 
     float mGameWidth;
     float mGameHeight;
+    SPImage *mPaddle;
 }
 
 - (id)initWithWidth:(float)width height:(float)height;
 
+@property (nonatomic, assign) SPImage *paddle;
 @property (nonatomic, assign) float gameWidth;
 @property (nonatomic, assign) float gameHeight;
 
