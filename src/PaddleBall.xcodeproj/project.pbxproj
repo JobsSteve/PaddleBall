@@ -12,7 +12,7 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
-		837B3D741676A67000D92C33 /* libSparrow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 837B3D6C16769FBA00D92C33 /* libSparrow.a */; };
+		837B3D801676AE5000D92C33 /* libSparrow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 837B3D7E1676AE3600D92C33 /* libSparrow.a */; };
 		DE0C71011624177000357F6E /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = DE0C71001624177000357F6E /* Default.png */; };
 		DE0C71031624177500357F6E /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DE0C71021624177500357F6E /* Default@2x.png */; };
 		DE0C71051624177800357F6E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DE0C71041624177800357F6E /* Default-568h@2x.png */; };
@@ -52,7 +52,7 @@
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* App-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "App-Prefix.pch"; sourceTree = "<group>"; };
-		837B3D6C16769FBA00D92C33 /* libSparrow.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSparrow.a; sourceTree = "<group>"; };
+		837B3D7E1676AE3600D92C33 /* libSparrow.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSparrow.a; path = libraries/libSparrow.a; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* App-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "App-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		DE0C71001624177000357F6E /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		DE0C71021624177500357F6E /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -95,7 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				837B3D741676A67000D92C33 /* libSparrow.a in Frameworks */,
+				837B3D801676AE5000D92C33 /* libSparrow.a in Frameworks */,
 				DE5C4E6E138ED109004892CA /* libz.dylib in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
@@ -167,7 +167,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				837B3D6C16769FBA00D92C33 /* libSparrow.a */,
+				837B3D7E1676AE3600D92C33 /* libSparrow.a */,
 				DE5C4E6D138ED109004892CA /* libz.dylib */,
 				DE3F093711B7B9DC009D4DB0 /* AVFoundation.framework */,
 				DE3F093911B7B9DC009D4DB0 /* AudioToolbox.framework */,
@@ -367,6 +367,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 					"\"${SPARROW_SRC}\"/**",
+					"\"$(SRCROOT)/libraries\"",
 				);
 				PRODUCT_NAME = PaddleBall;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -387,6 +388,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 					"\"${SPARROW_SRC}\"/**",
+					"\"$(SRCROOT)/libraries\"",
 				);
 				PRODUCT_NAME = PaddleBall;
 				TARGETED_DEVICE_FAMILY = "1,2";

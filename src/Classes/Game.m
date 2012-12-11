@@ -140,15 +140,17 @@
 - (void)onTouch:(SPTouchEvent *)event {
     SPTouch *touch = [event.touches anyObject];
     if (touch.phase == SPTouchPhaseBegan) {
+        mPaddle.x = touch.globalX;
         NSLog(@"begin");
     }
     if (touch.phase == SPTouchPhaseMoved) {
         NSLog(@"move");
         mPaddle.x = touch.globalX;
-        mPaddle.y = touch.globalY;
+        //mPaddle.y = touch.globalY;
         
     }
     if (touch.phase == SPTouchPhaseEnded) {
+        mPaddle.x = touch.globalX;
         NSLog(@"end");
     }
 }
