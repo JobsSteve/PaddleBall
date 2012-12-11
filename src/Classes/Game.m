@@ -20,9 +20,12 @@
 
 @implementation Game
 
+@synthesize targetPosition  = mTargetPosition;
+@synthesize direction = mDirection;
 @synthesize gameWidth  = mGameWidth;
 @synthesize gameHeight = mGameHeight;
 @synthesize paddle = mPaddle;
+@synthesize ball = mBall;
 
 - (id)initWithWidth:(float)width height:(float)height
 {
@@ -30,6 +33,7 @@
     {
         mGameWidth = width;
         mGameHeight = height;
+        mDirection = CGPointMake(31.0f, 4.0f);
         
         [self setup];
     }
@@ -76,20 +80,27 @@
     
     // Display the Sparrow egg
     
-    mPaddle = [[SPImage alloc] initWithTexture:[Media atlasTexture:@"sparrow"]];
+    mPaddle = [[SPImage alloc] initWithTexture:[Media atlasTexture:@"paddle"]];
     mPaddle.pivotX = (int)mPaddle.width / 2;
     mPaddle.pivotY = (int)mPaddle.height / 2;
     mPaddle.x = mGameWidth / 2;
-    mPaddle.y = mGameHeight / 2 + 40;
+    mPaddle.y = mGameHeight - 100;
     [self addChild:mPaddle];
+    
+    mBall = [[SPImage alloc] initWithTexture:[Media atlasTexture:@"ball"]];
+    mBall.pivotX = (int)mBall.width / 2;
+    mBall.pivotY = (int)mBall.height / 2;
+    mBall.x = mGameWidth / 2;
+    mBall.y = 50;
+    [self addChild:mBall];
     
     // play a sound when the image is touched
     [mPaddle addEventListener:@selector(onImageTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
     
     // Create a text field
     
-    NSString *text = @"To find out how to create your own game out of this scaffold, " \
-                     @"have a look at the 'First Steps' section of the Sparrow website!";
+    NSString *text = @"Deflect the ball by moving the paddle " \
+                     @"to the left and right";
     
     SPTextField *textField = [[SPTextField alloc] initWithWidth:280 height:80 text:text];
     textField.x = (mGameWidth - textField.width) / 2;
@@ -111,6 +122,10 @@
     
     [mPaddle addEventListener:@selector(onTouch:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
 
+    //SPTween *tween = [SPTween tweenWithTarget:textField time:0.2];
+    //[tween animateProperty:@"alpha" targetValue:0.0f];
+    //[[[SPStage mainStage].juggler delayInvocationAtTarget:self byTime:2.0f] addObject:tween];
+    //[[[SPStage mainStage].juggler delayInvocationAtTarget:textField byTime:2.0f] removeFromParent];
     
     
     // We release the objects, because we don't keep any reference to them.
@@ -139,20 +154,23 @@
 
 - (void)onTouch:(SPTouchEvent *)event {
     SPTouch *touch = [event.touches anyObject];
+     mTargetPosition = touch.globalX;
     if (touch.phase == SPTouchPhaseBegan) {
-        mPaddle.x = touch.globalX;
         NSLog(@"begin");
     }
     if (touch.phase == SPTouchPhaseMoved) {
         NSLog(@"move");
-        mPaddle.x = touch.globalX;
-        //mPaddle.y = touch.globalY;
         
     }
     if (touch.phase == SPTouchPhaseEnded) {
-        mPaddle.x = touch.globalX;
         NSLog(@"end");
     }
+    
+    
+    
+    SPTween *tween = [SPTween tweenWithTarget:mPaddle time:0.2];
+    [tween animateProperty:@"x" targetValue:mTargetPosition];
+    [[SPStage mainStage].juggler addObject:tween];
 }
 
 - (void)onEnterFrame:(SPEnterFrameEvent *)event
@@ -161,7 +179,38 @@
     //for (SPDisplayObject *child in mContainer)
         //child.rotation += 0.05f;
     
+    float adj = sin(mDirection.x * (M_PI / 180)) * mDirection.y;
+    float opp = cos(mDirection.x * (M_PI / 180)) * mDirection.y;
+    
+    mBall.x += adj;
+    mBall.y += opp;
+    
+    if(mBall.x + mBall.height / 2 > mGameWidth || mBall.x - mBall.width /2 < 0)
+    {
+        mDirection.x = [self getAngle:-adj opp:opp];
+    }else if(mBall.y + mBall.height /2 > mGameHeight || mBall.y - mBall.height / 2 < 0)
+    {
+        mDirection.x = [self getAngle:adj opp:-opp];
+    }
+    
+    if(mBall.y)
     // Check for collision detection
+    
+}
+
+- (float)getAngle:(float)adj opp:(float)opp
+{
+    float result = 0.0;
+    if(adj <= 0 && opp <= 0){
+        result = 180 + ( atan( abs(adj) / abs(opp) ) /(M_PI/180) );
+    }else if(adj >= 0 && opp <= 0){
+        result = 90 + ( atan( abs(opp) / abs(adj) ) /(M_PI/180) );
+    }else if(adj <= 0 && opp >= 0){
+        result = 270 + ( atan( abs(opp) / abs(adj) ) /(M_PI/180) );
+    }else{
+        result = ( atan( abs(adj) / abs(opp) ) /(M_PI/180) );
+    }
+    return result;
 }
 
 - (void)onImageTouched:(SPTouchEvent *)event
