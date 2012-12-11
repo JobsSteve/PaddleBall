@@ -33,7 +33,7 @@
     {
         mGameWidth = width;
         mGameHeight = height;
-        mDirection = CGPointMake(31.0f, 4.0f);
+        mDirection = CGPointMake(31.0f, 8.0f);
         
         [self setup];
     }
@@ -82,7 +82,7 @@
     
     mPaddle = [[SPImage alloc] initWithTexture:[Media atlasTexture:@"paddle"]];
     mPaddle.pivotX = (int)mPaddle.width / 2;
-    mPaddle.pivotY = (int)mPaddle.height / 2;
+    mPaddle.pivotY = 0;
     mPaddle.x = mGameWidth / 2;
     mPaddle.y = mGameHeight - 100;
     [self addChild:mPaddle];
@@ -95,7 +95,7 @@
     [self addChild:mBall];
     
     // play a sound when the image is touched
-    [mPaddle addEventListener:@selector(onImageTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
+    //[mPaddle addEventListener:@selector(onImageTouched:) atObject:self forType:SP_EVENT_TYPE_TOUCH];
     
     // Create a text field
     
@@ -193,7 +193,11 @@
         mDirection.x = [self getAngle:adj opp:-opp];
     }
     
-    if(mBall.y)
+    if(mBall.y + mBall.height / 2 > mPaddle.y && mBall.x > mPaddle.x - mPaddle.width/ 2 && mBall.x < mPaddle.x + mPaddle.width/2)
+    {
+        mDirection.x = [self getAngle:adj opp:-opp];
+        [Media playSound:@"sound.caf"];
+    }
     // Check for collision detection
     
 }
